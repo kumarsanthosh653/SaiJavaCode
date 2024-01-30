@@ -18,19 +18,19 @@ phases:
   post_build:
     commands:
       - echo "Build completed"
-      # - role=$(aws sts assume-role --role-arn arn:aws:iam::275416279984:role/cross-s3-deploy-role --role-session-name cargotrack-web-deployer-session --duration-seconds 900)
-      # - echo $role
-      # - KEY=$(echo $role | jq ".Credentials.AccessKeyId" --raw-output)
-      # - echo $KEY
-      # - SECRET=$(echo $role | jq ".Credentials.SecretAccessKey" --raw-output)
-      # - TOKEN=$(echo $role | jq ".Credentials.SessionToken" --raw-output)
-      # - export AWS_ACCESS_KEY_ID=$KEY
-      # - export AWS_SESSION_TOKEN=$TOKEN
-      # - export AWS_SECRET_ACCESS_KEY=$SECRET
-      # - export AWS_DEFAULT_REGION=us-west-2
-      - aws ssm get-parameter --name test-FL-pem-storage --query "Parameter.Value" --output text > private_key.pem
-      - chmod 600 private_key.pem
+      - role=$(aws sts assume-role --role-arn arn:aws:iam::275416279984:role/cross-s3-deploy-role --role-session-name cargotrack-web-deployer-session --duration-seconds 900)
+      - echo $role
+      - KEY=$(echo $role | jq ".Credentials.AccessKeyId" --raw-output)
+      - echo $KEY
+      - SECRET=$(echo $role | jq ".Credentials.SecretAccessKey" --raw-output)
+      - TOKEN=$(echo $role | jq ".Credentials.SessionToken" --raw-output)
+      - export AWS_ACCESS_KEY_ID=$KEY
+      - export AWS_SESSION_TOKEN=$TOKEN
+      - export AWS_SECRET_ACCESS_KEY=$SECRET
+      - export AWS_DEFAULT_REGION=us-west-2
+      # - aws ssm get-parameter --name test-FL-pem-storage --query "Parameter.Value" --output text > private_key.pem
+      # - chmod 600 private_key.pem
       # - ssh -i private_key.pem ec2-user@13.126.207.243 
       # - sudo su -
-      - scp -o StrictHostKeyChecking=no -i private_key.pem /codebuild/output/src*/src/webapp/target/webapp.war ec2-user@13.126.207.243:/opt/tomcat/webapps/
-      # - aws s3 cp /codebuild/output/src*/src/webapp/target/webapp.war s3://crossaccount-test-matson/artifacts/
+      # - scp -o StrictHostKeyChecking=no -i private_key.pem /codebuild/output/src*/src/webapp/target/webapp.war ec2-user@13.126.207.243:/opt/tomcat/webapps/
+      - aws s3 cp /codebuild/output/src*/src/webapp/target/webapp.war s3://crossaccount-test-matson/artifacts/
