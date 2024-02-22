@@ -28,7 +28,7 @@ phases:
       # - export AWS_SESSION_TOKEN=$TOKEN
       # - export AWS_SECRET_ACCESS_KEY=$SECRET
       # - export AWS_DEFAULT_REGION=us-west-2
-      - aws ssm get-parameter --name $parameter_name --query "Parameter.Value" --output text > private_key.pem
-      - chmod 600 private_key.pem
-      - scp -o StrictHostKeyChecking=no -i private_key.pem /codebuild/output/src*/src/webapp/target/webapp.war ec2-user@13.126.207.243:/opt/tomcat/webapps/
-      # - aws s3 cp /codebuild/output/src*/src/webapp/target/webapp.war s3://crossaccount-test-matson/artifacts/
+      # - aws ssm get-parameter --name $parameter_name --query "Parameter.Value" --output text > private_key.pem
+      # - chmod 600 private_key.pem
+      # - scp -o StrictHostKeyChecking=no -i private_key.pem /codebuild/output/src*/src/webapp/target/webapp.war ec2-user@13.126.207.243:/opt/tomcat/webapps/
+      # # - aws s3 cp /codebuild/output/src*/src/webapp/target/webapp.war s3://crossaccount-test-matson/artifacts/
