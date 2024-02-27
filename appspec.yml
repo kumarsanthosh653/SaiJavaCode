@@ -3,7 +3,7 @@ version: 0.0
 os: linux
 files:
   - source: /webapp.war
-    destination: /
+    destination: /home/ec2-user/
 file_exists_behavior: OVERWRITE
 # hooks:
 #   ApplicationStop:
