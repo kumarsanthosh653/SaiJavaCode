@@ -1,6 +1,6 @@
 ### appspec.yml ###
 version: 0.0
-os: Amazon Linux
+os: linux
 files:
   - source: /webapp.war
     destination: /
