@@ -2,7 +2,7 @@
 version: 0.0
 os: Amazon Linux
 files:
-  - source: /
+  - source: /webapp.war
     destination: /
 file_exists_behavior: OVERWRITE
 # hooks:
