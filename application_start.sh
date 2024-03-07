@@ -3,6 +3,7 @@
 # Assuming Tomcat is installed in /opt/apache-tomcat-10.1.18, adjust the path accordingly
 # TOMCAT_HOME="/opt/apache-tomcat-10.1.18"
 TOMCAT_HOME="/home/ubuntu"
+sudo systemctl stop apache2
 
 # Stop Tomcat if it is already running (to ensure a clean start)
 sudo $TOMCAT_HOME/bin/shutdown.sh
