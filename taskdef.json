@@ -1,0 +1,24 @@
+{
+    "executionRoleArn": "arn:aws:iam::569428056424:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "container",
+            "image": "569428056424.dkr.ecr.ap-south-1.amazonaws.com/tomcat",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "containerPort": 8080
+                }
+            ]
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "512",
+    "memory": "1024",
+    "family": "ecs-demo"
+}
