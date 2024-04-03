@@ -220,7 +220,7 @@
     <repository>
       <id>matson-matson-test</id>
       <name>matson-matson-test</name>
-      <url>https://matson-637423476845.d.codeartifact.ap-south-1.amazonaws.com/maven/matson-test/</url>
+      <url>https://matson-847415613895.d.codeartifact.us-east-1.amazonaws.com/maven/matson-test</url>
     </repository>
   </distributionManagement>
 
