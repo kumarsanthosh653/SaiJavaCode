@@ -26,7 +26,6 @@ phases:
           echo "Skipping build for non-lab stages"
         fi
       - ls
-      - aws s3 cp webapps.war s3://codepipeline-us-east-1-643667844411/codeartifact/
 
   post_build:
     commands:
