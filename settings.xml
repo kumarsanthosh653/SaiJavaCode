@@ -11,19 +11,15 @@
     <password>${env.CODEARTIFACT_AUTH_TOKEN}</password>
   </server>
 </servers>
-<profiles>
-  <profile>
-    <id>matson-matson-test</id>
-    <activation>
-      <activeByDefault>true</activeByDefault>
-    </activation>
-    <repositories>
-      <repository>
-        <id>matson-matson-test</id>
-        <url>https://matson-847415613895.d.codeartifact.us-east-1.amazonaws.com/maven/matson-test/</url>
-      </repository>
-    </repositories>
-  </profile>
-</profiles>
 
+<!--
+<mirrors>
+  <mirror>
+    <id>matson-artifacts</id>
+    <name>matson-artifacts</name>
+    <url>https://matson-196787314311.d.codeartifact.us-west-2.amazonaws.com/maven/artifacts/</url>
+    <mirrorOf>*</mirrorOf>
+  </mirror>
+</mirrors>
+-->
 </settings>
