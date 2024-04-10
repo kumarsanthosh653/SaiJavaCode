@@ -13,6 +13,7 @@ phases:
     commands:
       - echo "Build started"
       - mvn clean package
+      - ls
       # - yum install jq -y
 
   post_build:
