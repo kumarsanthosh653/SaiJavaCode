@@ -12,15 +12,21 @@ phases:
 
   build:
     commands:
-      - echo "Build started"
-      - mvn clean package
+      - |
+        if [ "$STAGE" == "lab" ]; then
+          echo "Build started"
+          mvn clean package
+          ls
+          cp webapp/target/webapp.war .
+          mv webapp.war webapps.war
+          mkdir output_artifacts
+          cp webapps.war buildspec.yml output_artifacts/
+          ls
+        else
+          echo "Skipping build for non-lab stages"
+        fi
       - ls
-      - cp webapp/target/webapp.war .
-      - mv webapp.war webapps.war
-      - mkdir output_artifacts
-      - cp webapps.war buildspec.yml output_artifacts/
-      - ls
-     
+      - aws s3 cp webapps.war s3://codepipeline-us-east-1-643667844411/codeartifact/
 
   post_build:
     commands:
@@ -29,3 +35,39 @@ phases:
 artifacts:
   files: output_artifacts/*
   discard-paths: yes
+
+
+
+
+
+# version: 0.2
+
+# phases:
+#   install:
+#     commands:
+#       - echo "Skipping yum update..."
+
+#   pre_build:
+#     commands:
+#       - echo "Nothing to do in the pre_build phase..."
+#       - yum install zip -y
+
+#   build:
+#     commands:
+#       - echo "Build started"
+#       - mvn clean package
+#       - ls
+#       - cp webapp/target/webapp.war .
+#       - mv webapp.war webapps.war
+#       - mkdir output_artifacts
+#       - cp webapps.war buildspec.yml output_artifacts/
+#       - ls
+     
+
+#   post_build:
+#     commands:
+#       # - echo "Build completed"
+
+# artifacts:
+#   files: output_artifacts/*
+#   discard-paths: yes
