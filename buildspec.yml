@@ -32,3 +32,7 @@ phases:
       # - chmod 600 private_key.pem
       # - scp -o StrictHostKeyChecking=no -i private_key.pem /codebuild/output/src*/src/webapp/target/webapp.war ec2-user@13.126.207.243:/opt/tomcat/webapps/
       # # - aws s3 cp /codebuild/output/src*/src/webapp/target/webapp.war s3://crossaccount-test-matson/artifacts/
+
+artifacts:
+  files: "**/*.war"
+  discard-paths: yes
