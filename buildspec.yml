@@ -17,7 +17,8 @@ phases:
       - ls
       - cp webapp/target/webapp.war .
       - mv webapp.war webapps.war
-      - zip -r Output_Package.zip webapps.war buildspec.yml
+      - mkdir output_artifacts
+      - cp webapps.war buildspec.yml output_artifacts/
       - ls
      
 
@@ -26,5 +27,5 @@ phases:
       # - echo "Build completed"
 
 artifacts:
-  files: Output_Package.zip
+  files: output_artifacts/*
   discard-paths: yes
