@@ -13,8 +13,12 @@ phases:
     commands:
       - echo "Build started"
       - mvn clean package
+      - cp target/webapp.war .
+      - mv webapp.war webapps.war
+      - cp webapps.war $DEPLOYMENT_PACKAGE_NAME
+      - cp buildspec.yml $DEPLOYMENT_PACKAGE_NAME
       - ls
-      # - yum install jq -y
+     
 
   post_build:
     commands:
@@ -35,5 +39,5 @@ phases:
       # # - aws s3 cp /codebuild/output/src*/src/webapp/target/webapp.war s3://crossaccount-test-matson/artifacts/
 
 artifacts:
-  files: "**/*.war"
+  files: $DEPLOYMENT_PACKAGE_NAME
   discard-paths: yes
