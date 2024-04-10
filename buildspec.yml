@@ -13,7 +13,8 @@ phases:
     commands:
       - echo "Build started"
       - mvn clean package
-      - cp target/webapp.war .
+      - ls
+      - cp webapp/target/webapp.war .
       - mv webapp.war webapps.war
       - cp webapps.war $DEPLOYMENT_PACKAGE_NAME
       - cp buildspec.yml $DEPLOYMENT_PACKAGE_NAME
