@@ -6,7 +6,7 @@
 
 <servers>
   <server>
-    <id>matson-matson-test</id>
+    <id>matson-repo-matson-build-dependancies</id>
     <username>aws</username>
     <password>${env.CODEARTIFACT_AUTH_TOKEN}</password>
   </server>
