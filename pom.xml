@@ -218,9 +218,9 @@
   </prerequisites>
   <distributionManagement>
     <repository>
-      <id>matson-matson-test</id>
-      <name>matson-matson-test</name>
-      <url>https://matson-847415613895.d.codeartifact.us-east-1.amazonaws.com/maven/matson-test</url>
+      <id>matson-repo-matson-build-dependancies</id>
+      <name>matson-repo-matson-build-dependancies</name>
+      <url>https://matson-repo-787367675716.d.codeartifact.ap-south-1.amazonaws.com/maven/matson-build-dependancies/</url>
     </repository>
   </distributionManagement>
 
