@@ -12,9 +12,9 @@ phases:
   build:
     commands:
       - echo "Build started"
-      - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain matson --domain-owner 847415613895 --region us-east-1 --query authorizationToken --output text`
-      - mvn deploy -s settings.xml
+      - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain matson-repo --domain-owner 787367675716 --region ap-south-1 --query authorizationToken --output text`
       - mvn clean package 
+      - mvn deploy -s settings.xml
       # - yum install jq -y
 
   post_build:
