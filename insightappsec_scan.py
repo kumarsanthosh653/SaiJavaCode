@@ -1,4 +1,3 @@
-[16:09] Waheed Uz Zama
 import boto3
 
 import requests
