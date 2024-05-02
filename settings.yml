@@ -1,0 +1,7 @@
+connection:
+  region: us
+  api_key: 7b838872-4298-4591-9ef2-eb7f2126a6db
+scan_info:
+  - app_name: d2522d633zl292.cloudfront.net
+    scan_config_name: d2522d633zl292.cloudfront.net
+status_check_interval: 60
