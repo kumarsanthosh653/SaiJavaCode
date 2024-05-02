@@ -1,0 +1,41 @@
+[16:09] Waheed Uz Zama
+import boto3
+
+import requests
+ 
+# Retrieve API key from Secrets Manager
+
+client = boto3.client('secretsmanager')
+
+secret_value = client.get_secret_value(SecretId="insightappsec/api-key")['SecretString']
+
+api_key = secret_value.strip()
+ 
+# Replace with the Insightappsec API endpoint URL for triggering a scan
+
+url = "https://api.insightappsec.com/v1/scans"
+ 
+# Replace with your application ID or other relevant data for the scan request
+
+data = {
+
+    "target": "29380e15-ebfa-4417-b770-a362d2869898",
+
+    # Add other scan configuration options as needed
+
+}
+ 
+headers = {
+
+    "Authorization": "7b838872-4298-4591-9ef2-eb7f2126a6db"
+
+}
+ 
+response = requests.post(url, headers=headers, json=data)
+ 
+# Handle the API response (e.g., print status code, parse JSON for scan details)
+
+print(f"API Response Status Code: {response.status_code}")
+
+# ... Parse response data if needed
+ 
