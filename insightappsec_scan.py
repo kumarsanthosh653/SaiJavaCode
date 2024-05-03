@@ -13,7 +13,7 @@ api_key = secret_value.strip()
 # Replace with the Insightappsec API endpoint URL for triggering a scan
 
 # url = "https://us3.api.insight.rapid7.com/ias/v1/"
-url = "https://us3.appsec.insight.rapid7.com/op/8403578BF677D0506B5C/#/apps/29380e15-ebfa-4417-b770-a362d2869898/configuration/5fdaf09c-0eea-4324-8a7b-20ceb13365b9/scan"
+url = "https://us.api.insight.rapid7.com/ias/v1/scans"
  
 # Replace with your application ID or other relevant data for the scan request
 
