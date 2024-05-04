@@ -7,7 +7,7 @@ secret_value = client.get_secret_value(SecretId="insightappsec/api-key")['Secret
 api_key = secret_value.strip()
  
 # Replace with the Insightappsec API endpoint URL for triggering a scan
-url = "https://us3.api.insightappsec.com/v1/scans"
+url = "https://us3.api.insight.rapid7.com/ias/v1/scans"
  
 # Replace 'target' with your application ID or other relevant data for the scan request
 data = {
