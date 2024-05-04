@@ -57,8 +57,14 @@ def create_scan():
 
     # Define the payload for the new scan (adjust as per your requirements)
     payload = {
-        'name': 'd2522d633zl292.cloudfront.net',
-        'target': '29380e15-ebfa-4417-b770-a362d2869898',
+        "scan_config": {
+            "id": "5fdaf09c-0eea-4324-8a7b-20ceb13365b9"
+    },
+        "scan_type": "VERIFICATION",
+        "validation": {
+            "parent_scan_id": "fecf4e8e-1a32-401a-bba3-06c5d7200483"
+
+    }
         # Add any other parameters required for the scan
     }
 
