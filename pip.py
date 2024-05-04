@@ -34,8 +34,8 @@ def validate_api_key():
     else:
         print("Authentication failed. Status code:", response.status_code)
 
-# Function to fetch scans
-def fetch_scans():
+# Function to fetch scans and extract parent_scan_id
+def fetch_parent_scan_id():
     # Construct the full URL for fetching scans
     url = base_url + scans_endpoint
 
@@ -47,17 +47,13 @@ def fetch_scans():
         print("Scans fetched successfully!")
         # Extract relevant information from scan results
         scan_results = response.json()
-        print("Scan Results:", scan_results)  # Print scan results for inspection
-        
-        # Continue with your logic to extract scan IDs
-        scan_id = None
-        scan_config_id = '5fdaf09c-0eea-4324-8a7b-20ceb13365b9'  # Your desired scan config ID
+        parent_scan_id = None
         for scan in scan_results.get('data', []):
-            if scan.get('scan_config', {}).get('id') == scan_config_id:
-                scan_id = scan.get('id')
+            if scan.get('scan_config', {}).get('id') == '5fdaf09c-0eea-4324-8a7b-20ceb13365b9':
+                parent_scan_id = scan.get('validation', {}).get('parent_scan_id')
                 break
-        if scan_id:
-            return scan_id
+        if parent_scan_id:
+            return parent_scan_id
         else:
             print("No scan found with the desired scan config ID.")
             return None
@@ -98,10 +94,10 @@ def create_scan(parent_scan_id):
 # Perform authentication
 validate_api_key()
 
-# Fetch scans and get the parent scan ID
-parent_scan_id = fetch_scans()
+# Fetch parent_scan_id
+parent_scan_id = fetch_parent_scan_id()
 
-# If parent scan ID is found, create a new scan
+# If parent_scan_id is found, create a new scan
 if parent_scan_id:
     create_scan(parent_scan_id)
 
