@@ -1,44 +1,54 @@
-import boto3
 import requests
 
-# Retrieve API key from Secrets Manager
-client = boto3.client('secretsmanager')
-secret_value = client.get_secret_value(SecretId="insightappsec/api-key")['SecretString']
-api_key = secret_value.strip()
+# Define your API key
+api_key = '801231d4-b4ae-42e4-ba2c-53ebe9ae02c6'
 
-# Define the InsightAppSec API endpoint URL for triggering a scan
-url = "https://us.api.insight.rapid7.com/ias/v1/scans"
+# Define the base URL for the API
+base_url = 'https://us.api.insight.rapid7.com'
 
-# Replace 'target' with your application ID or other relevant data for the scan request
-data = {
-    "target": "29380e15-ebfa-4417-b770-a362d2869898",
-    # Add other scan configuration options as needed
-}
+# Endpoint for authentication validation
+validate_endpoint = '/validate'
 
+# Endpoint to fetch scans
+scans_endpoint = '/ias/v1/scans'
+
+# Define headers for authentication
 headers = {
-    "Authorization": f"Token {api_key}"
+    'X-Api-Key': api_key
 }
 
-# Send a POST request to trigger the scan
-response = requests.post(url, headers=headers, json=data)
+# Function to perform authentication
+def validate_api_key():
+    # Construct the full URL for validation
+    url = base_url + validate_endpoint
 
-# Handle the API response
-print(f"API Response Status Code: {response.status_code}")
+    # Make the GET request for validation
+    response = requests.get(url, headers=headers)
 
-if response.status_code == 200:
-    print("Scan successfully triggered.")
-    # Parse response data for scan details
-    scan_id = response.json().get('id')
-    print(f"Scan ID: {scan_id}")
-else:
-    print("Failed to trigger the scan. Error:", response.text)
-
-# If the scan was successfully triggered, you can now retrieve scan results, for example:
-if scan_id:
-    scan_results_url = f"https://us.api.insight.rapid7.com/ias/v1/scans/{scan_id}/results"
-    scan_results_response = requests.get(scan_results_url, headers=headers)
-    if scan_results_response.status_code == 200:
-        print("Scan results:")
-        print(scan_results_response.json())
+    # Check if the request was successful
+    if response.status_code == 200:
+        print("Authentication successful!")
     else:
-        print("Failed to fetch scan results. Error:", scan_results_response.text)
+        print("Authentication failed. Status code:", response.status_code)
+
+# Function to fetch scans
+def fetch_scans():
+    # Construct the full URL for fetching scans
+    url = base_url + scans_endpoint
+
+    # Make the GET request to fetch scans
+    response = requests.get(url, headers=headers)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        print("Scans fetched successfully!")
+        print("Response:")
+        print(response.json())
+    else:
+        print("Failed to fetch scans. Status code:", response.status_code)
+
+# Perform authentication
+validate_api_key()
+
+# Fetch scans
+fetch_scans()
