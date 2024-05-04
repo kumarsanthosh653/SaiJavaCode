@@ -35,8 +35,8 @@ def validate_api_key():
     else:
         print("Authentication failed. Status code:", response.status_code)
 
-# Function to fetch scans and extract parent_scan_id
-def fetch_parent_scan_id():
+# Function to fetch scans
+def fetch_scans():
     # Construct the full URL for fetching scans
     url = base_url + scans_endpoint
 
@@ -46,18 +46,9 @@ def fetch_parent_scan_id():
     # Check if the request was successful
     if response.status_code == 200:
         print("Scans fetched successfully!")
-        # Extract relevant information from scan results
-        scan_results = response.json()
-        parent_scan_id = None
-        for scan in scan_results.get('data', []):
-            if scan.get('scan_config', {}).get('id') == '5fdaf09c-0eea-4324-8a7b-20ceb13365b9':
-                parent_scan_id = scan.get('validation', {}).get('parent_scan_id')
-                break
-        if parent_scan_id:
-            return parent_scan_id
-        else:
-            print("No scan found with the desired scan config ID.")
-            return None
+        print("Response:")
+        print(response.json())
+        return response.json()
     else:
         print("Failed to fetch scans. Status code:", response.status_code)
         return None
@@ -84,68 +75,41 @@ def create_scan(parent_scan_id):
     # Check if the request was successful
     if response.status_code == 201:
         print("New scan created successfully!")
-        if response.text:
-            print("Response:")
-            print(response.json())
-        else:
-            print("No response content.")
-        return response.json().get('id')
+        try:
+            scan_id = response.json().get('id')
+            if scan_id:
+                print("Scan ID:", scan_id)
+                return scan_id
+            else:
+                print("Failed to retrieve scan ID from response.")
+                return None
+        except Exception as e:
+            print("Failed to parse response JSON:", e)
+            return None
     else:
         print("Failed to create new scan. Status code:", response.status_code)
         return None
 
-# Function to check if scan is completed
-def is_scan_completed(scan_id):
-    # Construct the full URL for the scan status
-    url = base_url + f"/ias/v1/scans/{scan_id}"
-
-    # Make the GET request to fetch scan status
-    response = requests.get(url, headers=headers)
-
-    # Check if the request was successful
-    if response.status_code == 200:
-        scan_status = response.json().get('status')
-        if scan_status == 'COMPLETE':
-            return True
-        else:
-            print(f"Scan with ID {scan_id} is still in progress...")
-            return False
-    else:
-        print("Failed to fetch scan status. Status code:", response.status_code)
-        return False
-
-# Function to check vulnerabilities
-def check_vulnerabilities():
-    # Perform any logic to check for vulnerabilities
-    # For demonstration purposes, let's assume vulnerabilities are counted
-    vulnerabilities_count = 2  # Assuming vulnerabilities count is obtained somehow
-
-    # Check if vulnerabilities are equal to or greater than 3
-    if vulnerabilities_count >= 3:
-        return True
-    else:
-        return False
-
 # Perform authentication
 validate_api_key()
 
-# Fetch parent_scan_id
-parent_scan_id = fetch_parent_scan_id()
+# Fetch scans
+scan_results = fetch_scans()
 
-# If parent_scan_id is found, create a new scan
-if parent_scan_id:
-    scan_id = create_scan(parent_scan_id)
-
-    # If scan is created, wait until it is completed
-    if scan_id:
-        while not is_scan_completed(scan_id):
-            time.sleep(30)  # Wait for 30 seconds before checking again
-
-        # Check for vulnerabilities
-        if check_vulnerabilities():
-            print("Vulnerabilities found! Breaking the pipeline.")
-            raise Exception("Vulnerabilities found! Pipeline terminated.")
+if scan_results:
+    for scan in scan_results.get('data', []):
+        vulnerabilities_count = 0
+        # Check if there are any vulnerabilities
+        if vulnerabilities_count >= 3:
+            print("Vulnerabilities found. Breaking the pipeline.")
+            break
+        parent_scan_id = scan.get('validation', {}).get('parent_scan_id')
+        # Create a new scan with the parent_scan_id
+        scan_id = create_scan(parent_scan_id)
+        if scan_id:
+            # Wait for some time before fetching next scan
+            time.sleep(10)
         else:
-            print("Vulnerabilities less than 3. Continuing the pipeline.")
+            print("Failed to create scan. Skipping to the next one.")
 else:
-    print("No parent_scan_id found. Exiting script.")
+    print("No scans fetched. Exiting.")
