@@ -59,12 +59,11 @@ def create_scan():
     payload = {
         "scan_config": {
             "id": "5fdaf09c-0eea-4324-8a7b-20ceb13365b9"
-    },
+        },
         "scan_type": "VERIFICATION",
         "validation": {
             "parent_scan_id": "fecf4e8e-1a32-401a-bba3-06c5d7200483"
-
-    }
+        }
         # Add any other parameters required for the scan
     }
 
@@ -74,8 +73,12 @@ def create_scan():
     # Check if the request was successful
     if response.status_code == 201:
         print("New scan created successfully!")
-        print("Response:")
-        print(response.json())
+        # Check if the response content is empty
+        if response.text:
+            print("Response:")
+            print(response.json())
+        else:
+            print("No response content.")
     else:
         print("Failed to create new scan. Status code:", response.status_code)
 
