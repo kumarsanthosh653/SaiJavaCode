@@ -57,8 +57,8 @@ def create_scan():
 
     # Define the payload for the new scan (adjust as per your requirements)
     payload = {
-        'name': 'New Scan Name',
-        'target': 'http://d2522d633zl292.cloudfront.net',
+        'name': 'd2522d633zl292.cloudfront.net',
+        'target': '29380e15-ebfa-4417-b770-a362d2869898',
         # Add any other parameters required for the scan
     }
 
