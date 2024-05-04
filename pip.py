@@ -47,20 +47,27 @@ def fetch_scans():
         print("Scans fetched successfully!")
         # Extract relevant information from scan results
         scan_results = response.json()
-        scan_id = None
-        scan_config_id = '5fdaf09c-0eea-4324-8a7b-20ceb13365b9'  # Your desired scan config ID
-        for scan in scan_results['scans']:
-            if scan['scan_config']['id'] == scan_config_id:
-                scan_id = scan['id']
-                break
-        if scan_id:
-            return scan_id
+        
+        # Check if 'scans' key exists in the response
+        if 'scans' in scan_results:
+            scan_id = None
+            scan_config_id = '5fdaf09c-0eea-4324-8a7b-20ceb13365b9'  # Your desired scan config ID
+            for scan in scan_results['scans']:
+                if scan['scan_config']['id'] == scan_config_id:
+                    scan_id = scan['id']
+                    break
+            if scan_id:
+                return scan_id
+            else:
+                print("No scan found with the desired scan config ID.")
+                return None
         else:
-            print("No scan found with the desired scan config ID.")
+            print("No 'scans' key found in the response.")
             return None
     else:
         print("Failed to fetch scans. Status code:", response.status_code)
         return None
+
 
 # Function to create a new scan
 def create_scan(parent_scan_id):
