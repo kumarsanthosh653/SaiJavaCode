@@ -4,7 +4,7 @@ import requests
 api_key = '801231d4-b4ae-42e4-ba2c-53ebe9ae02c6'
 
 # Define the base URL for the API
-base_url = 'https://us.api.insight.rapid7.com'
+base_url = 'https://us3.api.insight.rapid7.com'
 
 # Endpoint for authentication validation
 validate_endpoint = '/validate'
