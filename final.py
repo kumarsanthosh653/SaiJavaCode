@@ -4,8 +4,6 @@ import json
 
 # Initialize Secrets Manager client
 client = boto3.client('secretsmanager')
-secret_value = client.get_secret_value(SecretId="insightappsec/api-key")['SecretString']
-api_key = secret_value.strip()client = boto3.client('secretsmanager')
 
 # Retrieve the secret value containing the API key
 secret_value = client.get_secret_value(SecretId="insightappsec/api-key")['SecretString']
@@ -88,7 +86,8 @@ create_scan()
 # Check for vulnerabilities
 if check_vulnerabilities():
     print("Vulnerabilities found! Breaking the pipeline.")
-    raise Exception("Vulnerabilities found! Pipeline terminated.") 
+    raise Exception("Vulnerabilities found! Pipeline terminated.")
+
 
 
 # import requests
