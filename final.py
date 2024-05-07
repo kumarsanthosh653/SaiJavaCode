@@ -50,13 +50,18 @@ def create_scan():
     # Check if the request was successful
     if response.status_code == 201:
         print("New scan created successfully!")
-        if response.text:
-            print("Response:")
-            print(response.json())
-        else:
-            print("No response content.")
+        try:
+            json_response = response.json()
+            if json_response:
+                print("Response:")
+                print(json_response)
+            else:
+                print("No response content.")
+        except ValueError:
+            print("Response is not valid JSON.")
     else:
         print("Failed to create new scan. Status code:", response.status_code)
+
 
 # Function to check vulnerabilities
 def check_vulnerabilities():
