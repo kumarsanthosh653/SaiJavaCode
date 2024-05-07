@@ -1,4 +1,4 @@
-import boto3
+import subprocess
 import json
 import os
 import requests
@@ -12,21 +12,17 @@ validate_endpoint = '/validate'
 # Endpoint to create a new scan
 create_scan_endpoint = '/ias/v1/scans'
 
-# Function to retrieve API key from AWS Secrets Manager
-def get_api_key_from_secrets_manager(secret_name, region_name):
-    # Create a Secrets Manager client
-    client = boto3.client('secretsmanager', region_name=region_name)
-
+# Function to retrieve API key from AWS Systems Manager Parameter Store
+def get_api_key_from_parameter_store(param_name):
     try:
-        # Retrieve the secret value
-        response = client.get_secret_value(SecretId=secret_name)
+        # Execute AWS CLI command to retrieve parameter value
+        command = f'aws ssm get-parameter --name {param_name} --with-decryption --query "Parameter.Value"'
+        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, text=True)
+        # Parse and return the parameter value
+        return result.stdout.strip()
     except Exception as e:
-        print("Error retrieving secret:", e)
+        print("Error retrieving parameter:", e)
         return None
-    else:
-        # Parse and return the secret value
-        secret = json.loads(response['SecretString'])
-        return secret.get('api_key')
 
 # Function to perform authentication
 def validate_api_key(api_key):
@@ -89,8 +85,9 @@ def check_vulnerabilities():
     # For demonstration purposes, let's assume vulnerabilities are more than 1
     return True
 
-# Retrieve API key from AWS Secrets Manager
-api_key = get_api_key_from_secrets_manager("insightappsec/api-key", "ap-south-1")
+# Retrieve API key from AWS Systems Manager Parameter Store
+param_name = "ohana-apis"
+api_key = get_api_key_from_parameter_store(param_name)
 
 # Check if API key exists
 if api_key:
@@ -105,7 +102,7 @@ if api_key:
         print("Vulnerabilities found! Breaking the pipeline.")
         raise Exception("Vulnerabilities found! Pipeline terminated.")
 else:
-    print("API key not found in Secrets Manager. Please check your configuration.")
+    print("API key not found in Parameter Store. Please check your configuration.")
 
 
 
