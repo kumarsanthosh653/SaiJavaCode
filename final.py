@@ -4,6 +4,8 @@ import json
 
 # Initialize Secrets Manager client
 client = boto3.client('secretsmanager')
+secret_value = client.get_secret_value(SecretId="insightappsec/api-key")['SecretString']
+api_key = secret_value.strip()client = boto3.client('secretsmanager')
 
 # Retrieve the secret value containing the API key
 secret_value = client.get_secret_value(SecretId="insightappsec/api-key")['SecretString']
@@ -22,7 +24,7 @@ create_scan_endpoint = '/ias/v1/scans'
 
 # Define headers for authentication
 headers = {
-    'X-Api-Key': api_key
+    'X-Api-Key': f"Token {api_key}"
 }
 
 # Function to perform authentication
