@@ -1,15 +1,7 @@
-import requests
 import boto3
 import json
-
-# Initialize Secrets Manager client
-client = boto3.client('secretsmanager')
-
-# Retrieve the secret value containing the API key
-secret_value = client.get_secret_value(SecretId="insightappsec/api-key")['SecretString']
-
-# Parse the JSON response to get the API key
-api_key = json.loads(secret_value).get('api_key')
+import os
+import requests
 
 # Define the base URL for the API
 base_url = 'https://us3.api.insight.rapid7.com'
@@ -20,15 +12,31 @@ validate_endpoint = '/validate'
 # Endpoint to create a new scan
 create_scan_endpoint = '/ias/v1/scans'
 
-# Define headers for authentication
-headers = {
-    'X-Api-Key': f"Token {api_key}"
-}
+# Function to retrieve API key from AWS Secrets Manager
+def get_api_key_from_secrets_manager(secret_name, region_name):
+    # Create a Secrets Manager client
+    client = boto3.client('secretsmanager', region_name=region_name)
+
+    try:
+        # Retrieve the secret value
+        response = client.get_secret_value(SecretId=secret_name)
+    except Exception as e:
+        print("Error retrieving secret:", e)
+        return None
+    else:
+        # Parse and return the secret value
+        secret = json.loads(response['SecretString'])
+        return secret.get('api_key')
 
 # Function to perform authentication
-def validate_api_key():
+def validate_api_key(api_key):
     # Construct the full URL for validation
     url = base_url + validate_endpoint
+
+    # Define headers for authentication
+    headers = {
+        'X-Api-Key': api_key
+    }
 
     # Make the GET request for validation
     response = requests.get(url, headers=headers)
@@ -40,9 +48,14 @@ def validate_api_key():
         print("Authentication failed. Status code:", response.status_code)
 
 # Function to create a new scan
-def create_scan():
+def create_scan(api_key):
     # Construct the full URL for creating a new scan
     url = base_url + create_scan_endpoint
+
+    # Define headers for authentication
+    headers = {
+        'X-Api-Key': api_key
+    }
 
     # Define the payload for the new scan
     payload = {
@@ -70,23 +83,30 @@ def create_scan():
     else:
         print("Failed to create new scan. Status code:", response.status_code)
 
-
 # Function to check vulnerabilities
 def check_vulnerabilities():
     # Perform any logic to check for vulnerabilities
     # For demonstration purposes, let's assume vulnerabilities are more than 1
     return True
-    
-# Perform authentication
-validate_api_key()
 
-# Create a new scan
-create_scan()
+# Retrieve API key from AWS Secrets Manager
+api_key = get_api_key_from_secrets_manager("insightappsec/api-key", "ap-south-1")
 
-# Check for vulnerabilities
-if check_vulnerabilities():
-    print("Vulnerabilities found! Breaking the pipeline.")
-    raise Exception("Vulnerabilities found! Pipeline terminated.")
+# Check if API key exists
+if api_key:
+    # Perform authentication
+    validate_api_key(api_key)
+
+    # Create a new scan
+    create_scan(api_key)
+
+    # Check for vulnerabilities
+    if check_vulnerabilities():
+        print("Vulnerabilities found! Breaking the pipeline.")
+        raise Exception("Vulnerabilities found! Pipeline terminated.")
+else:
+    print("API key not found in Secrets Manager. Please check your configuration.")
+
 
 
 
