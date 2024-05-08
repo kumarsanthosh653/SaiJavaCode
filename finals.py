@@ -1,5 +1,26 @@
+import boto3
 import json
 import requests
+
+# Function to fetch the API key from AWS Secrets Manager
+def get_api_key():
+    # Create a Secrets Manager client
+    client = boto3.client('secretsmanager')
+
+    # Retrieve the secret value
+    try:
+        response = client.get_secret_value(SecretId='insightappsec/api-key')  # Replace 'your-secret-id' with the actual ARN or name of your secret
+    except Exception as e:
+        print("Failed to retrieve secret:", e)
+        return None
+    else:
+        if 'SecretString' in response:
+            secret_string = response['SecretString']
+            secret_dict = json.loads(secret_string)
+            return secret_dict.get('api_key')
+        else:
+            print("Secret value is not a string.")
+            return None
 
 # Function to perform authentication
 def validate_api_key(api_key):
@@ -21,14 +42,8 @@ def validate_api_key(api_key):
     else:
         print("Authentication failed. Status code:", response.status_code)
 
-# Read API key from secret.json
-try:
-    with open('secret.json', 'r') as file:
-        secret_data = json.load(file)
-        api_key = secret_data.get('api_key')
-except Exception as e:
-    print("Failed to read secret:", e)
-    api_key = None
+# Fetch API key from Secrets Manager
+api_key = get_api_key()
 
 # Validate API key
 if api_key:
