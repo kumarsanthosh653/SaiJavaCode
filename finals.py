@@ -9,7 +9,7 @@ def get_api_key():
 
     # Retrieve the secret value
     try:
-        response = client.get_secret_value(SecretId='insightappsec/api-key')  # Replace 'your-secret-id' with the actual ARN or name of your secret
+        response = client.get_secret_value(SecretId='key')  # Replace 'your-secret-id' with the actual ARN or name of your secret
     except Exception as e:
         print("Failed to retrieve secret:", e)
         return None
