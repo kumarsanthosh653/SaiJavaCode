@@ -12,7 +12,7 @@ RUN wget -q -O /jetty.tar.gz "https://repo1.maven.org/maven2/org/eclipse/jetty/j
 
 # Installing Jetty
 RUN tar -xvf /jetty.tar.gz && rm /jetty.tar.gz && mv jetty-distribution-10.0.0.beta0 /opt/jetty
-
+#vsbsnsbs
 # Redirecting to Working Directory
 WORKDIR /opt/jetty
 
