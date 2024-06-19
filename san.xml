@@ -1,2 +1,6 @@
 hello1
+<<<<<<< Updated upstream
 hello3
+=======
+hello2
+>>>>>>> Stashed changes
