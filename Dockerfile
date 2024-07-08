@@ -1,5 +1,5 @@
 FROM alpine:latest
-FROM openjdk:11.0.13
+FROM 637423476845.dkr.ecr.ap-south-1.amazonaws.com/ecs:myjava
 
 
 
