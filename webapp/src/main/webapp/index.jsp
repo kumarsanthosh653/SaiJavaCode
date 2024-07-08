@@ -6,6 +6,10 @@
         h1 {
             color: blue;
         }
+        h2 {
+            display: inline-block;
+            margin-right: 10px;
+        }
         h2.version1 {
             color: green;
         }
@@ -29,9 +33,22 @@
 </head>
 <body>
     <h1>Hello Minfy Team!!</h1>
-    <h2 class="version1">This is Version1</h2>
-    <h2 class="version2">This is Version2</h2>
-    <h2 class="version3">This is Version3</h2>
+    
+    <div>
+        <h2 class="version1">This is Version1</h2>
+        <img src="https://via.placeholder.com/150?text=Version1" alt="Version 1 Image">
+    </div>
+    
+    <div>
+        <h2 class="version2">This is Version2</h2>
+        <img src="https://via.placeholder.com/150?text=Version2" alt="Version 2 Image">
+    </div>
+    
+    <div>
+        <h2 class="version3">This is Version3</h2>
+        <img src="https://via.placeholder.com/150?text=Version3" alt="Version 3 Image">
+    </div>
+    
     <button onclick="showThankYouMessage()">Press me</button>
     <div id="thankYouMsg" class="thank-you">Thank you!</div>
 </body>
