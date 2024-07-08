@@ -36,17 +36,17 @@
     
     <div>
         <h2 class="version1">This is Version1</h2>
-        <img src="https://via.placeholder.com/150?text=Version1" alt="Version 1 Image">
+        <img src="https://via.placeholder.com/150?text=Person1" alt="Person representing Version 1">
     </div>
     
     <div>
         <h2 class="version2">This is Version2</h2>
-        <img src="https://via.placeholder.com/150?text=Version2" alt="Version 2 Image">
+        <img src="https://via.placeholder.com/150?text=Person2" alt="Person representing Version 2">
     </div>
     
     <div>
         <h2 class="version3">This is Version3</h2>
-        <img src="https://via.placeholder.com/150?text=Version3" alt="Version 3 Image">
+        <img src="https://via.placeholder.com/150?text=Person3" alt="Person representing Version 3">
     </div>
     
     <button onclick="showThankYouMessage()">Press me</button>
