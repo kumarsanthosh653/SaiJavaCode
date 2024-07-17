@@ -3,7 +3,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "arn:aws:ecs:ap-south-1:637423476845:task-definition/ecstd:5"
+        TaskDefinition: "arn:aws:ecs:ap-south-1:637423476845:task-definition/task:1"
         LoadBalancerInfo:
           ContainerName: "xontainer1"
           ContainerPort: 8080
