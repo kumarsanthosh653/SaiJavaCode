@@ -1,0 +1,8 @@
+# .hadolint.yaml
+
+ignore:
+  - DL3006  # Ignore this rule
+
+rules:
+  DL3000:
+    level: warning
