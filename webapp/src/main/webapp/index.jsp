@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Value Momentum Team</title>
+    <meta name="insight-app-sec-validation" content="cd95b19b-f069-4c41-b682-dcd94275aac1">
     <style>
         body {
             font-family: Arial, sans-serif;
