@@ -23,6 +23,6 @@ COPY webapp.war /opt/jetty/webapps/ROOT.war
 COPY webapp.war /opt/jetty/demo-base/
 # Executing Jetty
 CMD ["/opt/jetty/bin/jetty.sh", "run"]
-
+CMD ["/opt/jetty/bin/jetty.sh", "start"]
 # Exposing Port
 EXPOSE 8080
