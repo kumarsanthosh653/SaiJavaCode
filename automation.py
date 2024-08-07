@@ -68,6 +68,9 @@ def create_scan(api_key):
     # Make the POST request to create a new scan
     response = requests.post(url, json=payload, headers=headers)
 
+    # Print full response content for debugging
+    print(f"Response Content: {response.content}")
+
     # Check if the request was successful
     if response.status_code == 201:
         print("New scan created successfully!")
@@ -89,7 +92,7 @@ def create_scan(api_key):
             print("Response is not valid JSON.")
             return None
     else:
-        print("Failed to create new scan. Status code:", response.status_code)
+        print(f"Failed to create new scan. Status code: {response.status_code}, Content: {response.content}")
         return None
 
 # Function to create a JIRA issue
@@ -142,6 +145,9 @@ def check_vulnerabilities_and_create_issues(api_key, scan_id):
     # Make the GET request to retrieve vulnerabilities
     response = requests.get(url, headers=headers)
 
+    # Print full response content for debugging
+    print(f"Response Content: {response.content}")
+
     # Check if the request was successful
     if response.status_code == 200:
         try:
@@ -158,7 +164,7 @@ def check_vulnerabilities_and_create_issues(api_key, scan_id):
         except ValueError:
             print("Response is not valid JSON.")
     else:
-        print("Failed to retrieve vulnerabilities. Status code:", response.status_code)
+        print(f"Failed to retrieve vulnerabilities. Status code: {response.status_code}, Content: {response.content}")
 
 # Fetch API key from Systems Manager Parameter Store
 api_key = get_api_key()
