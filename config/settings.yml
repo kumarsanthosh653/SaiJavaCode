@@ -1,0 +1,14 @@
+connection:
+  region: us3
+  api_key: a67e4f0d-203e-4cb9-8dad-e22b279268fb
+scan_info:
+  - app_name: santhu.life
+    scan_config_name: http://santhu.life
+status_check_interval: 60
+jira:
+  url: https://kumarsanthosh653.atlassian.net
+  user: kumarsanthosh653@gmail.com
+  token: ATATT3xFfGF0k1qdgA_PSCrFEJ7bJ5WlunSmuWjQcdFrrG0mUFrvxzdoxha7HasD3dd8zF8up7nFL8tcuue9nkakKRAfkDJmoqL2nOSzcGEjBbzVU7DZ0FMQvNsRy0gcg-cJfc7wmPvlpwjpr4Adl_151NDvxzXYOiRXfaG6XSeiW2Q2yDFNt4U=CD90DFF0
+  project_key: KAN
+
+
