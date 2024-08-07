@@ -1,7 +1,8 @@
 import logging
 import time
+import requests
+from requests.auth import HTTPBasicAuth
 from .insightappsec import InsightAppSec
-
 
 def create_scan(api_key: str, region: str, settings: dict):
     try:
@@ -24,23 +25,72 @@ def create_scan(api_key: str, region: str, settings: dict):
         # Step 4 - Track scan status
         track_scans(api, scan_ids, id_to_names, interval)
 
-        # Step 5 - Report Findings
-        report_findings(api, scan_ids, id_to_names)
+        # Step 5 - Report Findings and create Jira issues
+        report_findings(api, scan_ids, id_to_names, settings)
 
     except Exception as e:
         logging.error(f"Encountered error while creating scans: {e}")
 
-def report_findings(api: InsightAppSec, scan_ids: [str], id_to_names: dict):
+def report_findings(api: InsightAppSec, scan_ids: [str], id_to_names: dict, settings: dict):
     """
-    Given list of scan IDs, report on number of vulnerabilities found
+    Given list of scan IDs, report on number of vulnerabilities found and create Jira issues
     """
     logging.info("REPORTING VULNERABILITY COUNTS OF SCANS... (Scan ID, App Name, Scan Config Name): NUM VULNS")
+
+    # Jira configuration
+    jira_url = settings['jira']['url']
+    jira_user = settings['jira']['user']
+    jira_token = settings['jira']['token']
+    jira_project_key = settings['jira']['project_key']
+
     for scan_id in scan_ids:
         details = api.search('VULNERABILITY', f"vulnerability.scans.id='{scan_id}'")
         num_findings = details.get("metadata").get("total_data")
-        logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}: {num_findings}")
 
+        logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}): {num_findings}")
 
+        # Create Jira issues for each vulnerability
+        vulnerabilities = details.get('data', [])
+        for vulnerability in vulnerabilities:
+            summary = vulnerability.get('title', 'No title')
+            description = vulnerability.get('description', 'No description available.')
+            create_jira_issue(jira_url, jira_user, jira_token, jira_project_key, summary, description)
+
+def create_jira_issue(jira_url, jira_user, jira_token, jira_project_key, summary, description):
+    """
+    Create a Jira issue for a given vulnerability
+    """
+    url = f"{jira_url}/rest/api/3/issue"
+    auth = HTTPBasicAuth(jira_user, jira_token)
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+
+    # Prepare the payload for creating a Jira issue
+    issue_data = {
+        'fields': {
+            'project': {
+                'key': jira_project_key
+            },
+            'summary': summary,
+            'description': description,
+            'issuetype': {
+                'name': 'Bug'  # Change as needed
+            }
+        }
+    }
+
+    # Make the POST request to create a Jira issue
+    response = requests.post(url, headers=headers, auth=auth, json=issue_data)
+
+    # Check if the request was successful
+    if response.status_code == 201:
+        issue_key = response.json().get('key')
+        logging.info(f'Jira issue created successfully: {issue_key}')
+    else:
+        logging.error(f'Failed to create Jira issue: {response.content}')
+        
 def track_scans(api: InsightAppSec, scan_ids: [str], id_to_names: dict, interval: int):
     """
     Tracks the status of all current scans being run
@@ -133,4 +183,3 @@ def log_status(api: InsightAppSec, scan_id: str, id_to_names: dict) -> str:
         failure_reason = scan.get("failure_reason")
         logging.info(f"Reason for failure: {failure_reason}")
     return scan_status
-
