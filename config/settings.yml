@@ -1,9 +1,7 @@
 connection:
-  region: us
-  api_key: 
+  region: us3
+  api_key: a67e4f0d-203e-4cb9-8dad-e22b279268fb
 scan_info:
-  - app_name: Application 1
-    scan_config_name: Default
-  - app_name: Application 2
-    scan_config_name: Default
+  - app_name: santhu.life
+    scan_config_name: http://santhu.life
 status_check_interval: 60
