@@ -68,8 +68,10 @@ def create_scan(api_key):
     # Make the POST request to create a new scan
     response = requests.post(url, json=payload, headers=headers)
 
-    # Print full response content for debugging
-    print(f"Response Content: {response.content}")
+    # Check for empty response content
+    if not response.content:
+        print("Received empty response from the server.")
+        return None
 
     # Check if the request was successful
     if response.status_code == 201:
@@ -145,8 +147,10 @@ def check_vulnerabilities_and_create_issues(api_key, scan_id):
     # Make the GET request to retrieve vulnerabilities
     response = requests.get(url, headers=headers)
 
-    # Print full response content for debugging
-    print(f"Response Content: {response.content}")
+    # Check for empty response content
+    if not response.content:
+        print("Received empty response from the server.")
+        return
 
     # Check if the request was successful
     if response.status_code == 200:
