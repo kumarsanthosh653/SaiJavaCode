@@ -11,10 +11,10 @@ from lib.helpers import scan_automation
 def main():
     # Load configuration file
     yaml = YAML(typ='safe')
-    settings = yaml.load(open("settings.yml"))
+    settings = yaml.load(open("../config/settings.yml"))
     
     # Setup basic logging
-    logging.basicConfig(filename="scan_automation.log", filemode="a", level=logging.INFO,
+    logging.basicConfig(filename="../log/scan_automation.log", filemode="a", level=logging.INFO,
                         format=str(datetime.now()) + " - %(levelname)s - %(message)s")
 
     # Get connection info
