@@ -37,8 +37,17 @@ def report_findings(api: InsightAppSec, scan_ids: [str], id_to_names: dict):
     logging.info("REPORTING VULNERABILITY COUNTS OF SCANS... (Scan ID, App Name, Scan Config Name): NUM VULNS")
     for scan_id in scan_ids:
         details = api.search('VULNERABILITY', f"vulnerability.scans.id='{scan_id}'")
-        num_findings = details.get("metadata").get("total_data")
-        logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}: {num_findings}")
+        
+        if isinstance(details, list) and len(details) > 0:
+            num_findings = details[0].get("metadata").get("total_data")
+        elif isinstance(details, dict):
+            num_findings = details.get("metadata", {}).get("total_data", 0)
+        else:
+            logging.error(f"Unexpected response format for scan ID {scan_id}: {details}")
+            num_findings = 0
+
+        logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}): {num_findings}")
+
 
 
 def track_scans(api: InsightAppSec, scan_ids: [str], id_to_names: dict, interval: int):
