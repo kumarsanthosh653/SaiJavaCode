@@ -1,0 +1,7 @@
+connection:
+    region: us2
+    api_key: 143c2a7a-534f-4daa-b58f-62b01db46def
+scan_info:
+   - app_name: gowdasagar.online
+     scan_config_name: http://gowdasagar.online
+status_check_interval: 60
