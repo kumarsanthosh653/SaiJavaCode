@@ -11,14 +11,14 @@ mv /tmp/webapp.war /opt/jetty/webapps/
 
 
 # Wait for Tomcat to fully start (adjust the sleep duration based on your application's startup time)
-sleep 60
+sleep 10
 
 # Start Tomcat
-/opt/jetty/bin/jetty.sh stop
-/opt/jetty/bin/jetty.sh start
+# /opt/jetty/bin/jetty.sh stop
+# /opt/jetty/bin/jetty.sh start
 
 # Wait for Tomcat to fully start (adjust the sleep duration based on your application's startup time)
-sleep 60
+# sleep 60
 
 
 
