@@ -36,17 +36,35 @@ def report_findings(api: InsightAppSec, scan_ids: [str], id_to_names: dict):
     """
     logging.info("REPORTING VULNERABILITY COUNTS OF SCANS... (Scan ID, App Name, Scan Config Name): NUM VULNS")
     for scan_id in scan_ids:
-        details = api.search('VULNERABILITY', f"vulnerability.scans.id='{scan_id}'")
-        
-        if isinstance(details, list) and len(details) > 0:
-            num_findings = details[0].get("metadata").get("total_data")
-        elif isinstance(details, dict):
-            num_findings = details.get("metadata", {}).get("total_data", 0)
-        else:
-            logging.error(f"Unexpected response format for scan ID {scan_id}: {details}")
-            num_findings = 0
+        try:
+            details = api.search('VULNERABILITY', f"vulnerability.scans.id='{scan_id}'")
+            if details is None:
+                logging.warning(f"No details returned for scan ID {scan_id}")
+                continue
 
-        logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}): {num_findings}")
+            if isinstance(details, list) and len(details) > 0:
+                num_findings = details[0].get("metadata", {}).get("total_data", 0)
+                vulns = details[0].get("data", [])
+            elif isinstance(details, dict):
+                num_findings = details.get("metadata", {}).get("total_data", 0)
+                vulns = details.get("data", [])
+            else:
+                logging.error(f"Unexpected response format for scan ID {scan_id}: {details}")
+                num_findings = 0
+                vulns = []
+
+            logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}): {num_findings}")
+
+            # Check vulnerabilities severity
+            for vuln in vulns:
+                severity = vuln.get("severity")
+                if severity == "HIGH":
+                    logging.warning(f"High severity vulnerability found! Immediate attention required. Scan ID: {scan_id}, App Name: {id_to_names.get(scan_id)[0]}, Scan Config Name: {id_to_names.get(scan_id)[1]}")
+                elif severity == "LOW":
+                    logging.info(f"Low severity vulnerability found. Please review. Scan ID: {scan_id}, App Name: {id_to_names.get(scan_id)[0]}, Scan Config Name: {id_to_names.get(scan_id)[1]}")
+        except Exception as e:
+            logging.error(f"Error reporting findings for scan ID {scan_id}: {e}")
+
 
 
 
