@@ -1,7 +1,7 @@
 import requests
 
 # Replace with your InsightAppSec API key
-API_KEY = "f8096810-123c-43c9-87c8-cc76cebea7ec"
+API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 # Base URL for InsightAppSec API
 BASE_URL = "https://us.api.insight.rapid7.com/ias/v1"
