@@ -140,17 +140,19 @@ def get_ids(api: InsightAppSec, scan_pairs: [(str, str)]):
         scan_pairs_ids.append((app_id, scan_config_id))
     return scan_pairs_ids
 
-def log_status(api: InsightAppSec, scan_id: str, id_to_names: dict) -> str:
-    """
-    Logs current status of a scan given its ID
-    """
-    scan = api.get_scan(scan_id)
-    scan_status = scan.get("status")
-    logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}): {scan_status}")
-    if scan_status == "FAILED":
-        failure_reason = scan.get("failure_reason")
-        logging.info(f"Reason for failure: {failure_reason}")
-    return scan_status
+def get_vulnerabilities(self, scan_id):
+    url = self.url + f"/vulnerabilities?scans.id={scan_id}"
+    headers = self.headers
+
+    try:
+        response = requests.get(url=url, headers=headers)
+        response.raise_for_status()
+
+        vulnerabilities = response.json().get("data", [])
+        return vulnerabilities
+    except Exception as e:
+        logging.error(f"Error in InsightAppSec API: Get Vulnerabilities for scan {scan_id}\n{e}")
+        raise e
 
 
 
