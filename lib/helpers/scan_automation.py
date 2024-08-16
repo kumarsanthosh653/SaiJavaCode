@@ -32,34 +32,22 @@ def create_scan(api_key: str, region: str, settings: dict):
 
 def report_findings(api: InsightAppSec, scan_ids: [str], id_to_names: dict):
     """
-    Given list of scan IDs, report on number of vulnerabilities found
+    Given list of scan IDs, report on number of vulnerabilities found and their details.
     """
-    logging.info("REPORTING VULNERABILITY COUNTS OF SCANS... (Scan ID, App Name, Scan Config Name): NUM VULNS")
+    logging.info("REPORTING VULNERABILITY DETAILS OF SCANS... (Scan ID, App Name, Scan Config Name): NUM VULNS")
     for scan_id in scan_ids:
         try:
-            details = api.search('VULNERABILITY', f"vulnerability.scans.id='{scan_id}'")
-            if details is None:
-                logging.warning(f"No details returned for scan ID {scan_id}")
-                continue
+            details = api.get_vulnerabilities(scan_id)
+            num_findings = len(details)
 
-            if isinstance(details, list) and len(details) > 0:
-                num_findings = details[0].get("metadata", {}).get("total_data", 0)
-                vulns = details[0].get("data", [])
-            elif isinstance(details, dict):
-                num_findings = details.get("metadata", {}).get("total_data", 0)
-                vulns = details.get("data", [])
-            else:
-                logging.error(f"Unexpected response format for scan ID {scan_id}: {details}")
-                num_findings = 0
-                vulns = []
-
-            logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}): {num_findings}")
+            logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}): {num_findings} vulnerabilities found")
 
             # Log each vulnerability found
-            for vuln in vulns:
+            for vuln in details:
                 severity = vuln.get("severity")
                 vuln_name = vuln.get("name", "Unknown Vulnerability")
-                logging.info(f"Vulnerability found - Name: {vuln_name}, Severity: {severity}, Scan ID: {scan_id}")
+                vuln_description = vuln.get("description", "No description available")
+                logging.info(f"Vulnerability found - Name: {vuln_name}, Severity: {severity}, Description: {vuln_description}, Scan ID: {scan_id}")
                 if severity == "HIGH":
                     logging.warning(f"High severity vulnerability found! Immediate attention required. Scan ID: {scan_id}, App Name: {id_to_names.get(scan_id)[0]}, Scan Config Name: {id_to_names.get(scan_id)[1]}")
                 elif severity == "LOW":
