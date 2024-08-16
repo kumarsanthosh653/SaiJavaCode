@@ -28,9 +28,10 @@ def get_scan_vulnerabilities(scan_id):
         if vulnerabilities:
             print(f"Vulnerabilities for Scan ID {scan_id}:")
             for vuln in vulnerabilities:
-                vuln_id = vuln['id']
-                severity = vuln['attributes'].get('severity', 'Unknown')
-                description = vuln['attributes'].get('description', 'None')
+                vuln_id = vuln.get('id', 'N/A')
+                attributes = vuln.get('attributes', {})
+                severity = attributes.get('severity', 'Unknown')
+                description = attributes.get('description', 'None')
                 print(f"Vuln ID: {vuln_id}, Severity: {severity}, Description: {description}")
         else:
             print(f"No vulnerabilities found for Scan ID {scan_id}.")
