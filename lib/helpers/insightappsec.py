@@ -76,16 +76,3 @@ class InsightAppSec:
         url_split = url.split("/")
         resource_id = url_split[-1]
         return resource_id
-    def get_vulnerabilities(self, scan_id):
-        url = self.url + f"/vulnerabilities?query=vulnerability.scans.id='{scan_id}'"
-        headers = self.headers
-
-        try:
-            response = requests.get(url=url, headers=headers)
-            response.raise_for_status()
-
-            vulnerabilities = response.json()
-            return vulnerabilities
-        except Exception as e:
-            logging.error(f"Error in InsightAppSec API: Get Vulnerabilities\n{e}")
-            raise e
