@@ -34,17 +34,11 @@ def report_findings(api: InsightAppSec, scan_ids: [str], id_to_names: dict):
     """
     Given list of scan IDs, report on number of vulnerabilities found
     """
-    logging.info("REPORTING VULNERABILITY DETAILS OF SCANS... (Scan ID, App Name, Scan Config Name): DETAILS")
+    logging.info("REPORTING VULNERABILITY COUNTS OF SCANS... (Scan ID, App Name, Scan Config Name): NUM VULNS")
     for scan_id in scan_ids:
-        vulnerabilities = api.get_vulnerabilities(scan_id)
-        num_findings = len(vulnerabilities.get("data", []))
-        logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}: {num_findings} vulnerabilities found)")
-
-        for vuln in vulnerabilities.get("data", []):
-            vuln_id = vuln.get("id")
-            severity = vuln.get("severity")
-            description = vuln.get("description")
-            logging.info(f"Vuln ID: {vuln_id}, Severity: {severity}, Description: {description}")
+        details = api.search('VULNERABILITY', f"vulnerability.scans.id='{scan_id}'")
+        num_findings = details.get("metadata").get("total_data")
+        logging.info(f"({scan_id}, {id_to_names.get(scan_id)[0]}, {id_to_names.get(scan_id)[1]}: {num_findings}")
 
 
 def track_scans(api: InsightAppSec, scan_ids: [str], id_to_names: dict, interval: int):
