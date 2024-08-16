@@ -1,53 +1,45 @@
 import requests
-import logging
 
-class InsightAppSec:
-    def __init__(self, **kwargs):
-        self.url = kwargs.get("url")
-        self.api_key = kwargs.get("api_key")
-        self.headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "x-api-key": self.api_key,
-        }
+# Function to fetch vulnerabilities for a specific scan ID
+def fetch_vulnerabilities(scan_id, api_key):
+    url = "https://us2.api.insight.rapid7.com/ias/v1/vulnerabilities"
+    headers = {
+        "X-Api-Key": api_key,
+        "Content-Type": "application/json"
+    }
+    params = {
+        "scan.id": scan_id  # Ensure the correct scan ID is being used as a parameter
+    }
 
-    def get_vulnerabilities(self, scan_id):
-        url = self.url + f"/vulnerabilities?query=vulnerability.scans.id='{scan_id}'"
-        headers = self.headers
+    response = requests.get(url, headers=headers, params=params)
 
-        try:
-            response = requests.get(url=url, headers=headers)
-            response.raise_for_status()
+    if response.status_code == 200:
+        vulnerabilities = response.json().get('data', [])
+        return vulnerabilities
+    else:
+        print(f"Failed to fetch vulnerabilities for Scan ID {scan_id}. Status Code: {response.status_code}")
+        return []
 
-            vulnerabilities = response.json()
-            return vulnerabilities
-        except Exception as e:
-            logging.error(f"Error in InsightAppSec API: Get Vulnerabilities\n{e}")
-            raise e
-
-def test_get_vulnerabilities():
-    # Set up logging
-    logging.basicConfig(level=logging.INFO)
-
-    # Replace with your actual API key and region
-    api_key = "143c2a7a-534f-4daa-b58f-62b01db46def"
-    region = "us2"
-    scan_id = "1d3068a5-ac65-46b6-8008-2d2745950914"
-
-    # Create an instance of InsightAppSec
-    url = f"https://{region}.api.insight.rapid7.com/ias/v1"
-    api = InsightAppSec(url=url, api_key=api_key)
-
-    # Call the get_vulnerabilities method
-    vulnerabilities = api.get_vulnerabilities(scan_id)
-
-    # Print the results
+# Function to display vulnerabilities for a given scan ID
+def display_vulnerabilities(scan_id, vulnerabilities):
     print(f"Vulnerabilities for Scan ID {scan_id}:")
-    for vuln in vulnerabilities.get("data", []):
-        vuln_id = vuln.get("id")
-        severity = vuln.get("severity")
-        description = vuln.get("description")
+    for vuln in vulnerabilities:
+        vuln_id = vuln.get('id', 'N/A')
+        severity = vuln.get('severity', 'N/A')
+        description = vuln.get('description', 'None')
         print(f"Vuln ID: {vuln_id}, Severity: {severity}, Description: {description}")
 
-if __name__ == "__main__":
-    test_get_vulnerabilities()
+# List of scan IDs to test
+scan_ids = [
+    "192a3cf4-2d95-4800-b131-607e566148fd",
+    "8e7dc93e-7138-44df-ad61-0a779c568311"
+]
+
+# Your API key
+api_key = "your_api_key_here"
+
+# Fetch and display vulnerabilities for each scan ID
+for scan_id in scan_ids:
+    vulnerabilities = fetch_vulnerabilities(scan_id, api_key)
+    display_vulnerabilities(scan_id, vulnerabilities)
+    print("\n" + "-"*50 + "\n")
