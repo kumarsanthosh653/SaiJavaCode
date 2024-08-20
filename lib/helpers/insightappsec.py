@@ -1,6 +1,5 @@
 import json
 import requests
-import logging
 
 
 class InsightAppSec:
@@ -15,77 +14,71 @@ class InsightAppSec:
 
     def submit_scan(self, body):
         url = self.url + "/scans"
-        headers = self.headers
         try:
-            response = requests.post(url=url, headers=headers, data=json.dumps(body))
+            response = requests.post(url=url, headers=self.headers, data=json.dumps(body))
             response.raise_for_status()
 
             scan_id = self.get_url_id(response.headers.get("location"))
-            logging.info(f"Launched new scan: {scan_id}")
+            print(f"Launched new scan: {scan_id}")
             return scan_id
         except Exception as e:
-            logging.error(f"Error in InsightAppSec API: Submit Scan\n{e}")
+            print(f"Error in InsightAppSec API: Submit Scan\n{e}")
             raise e
 
     def get_scan(self, scan_id):
-        url = self.url + "/scans/" + scan_id
-        headers = self.headers
-
+        url = self.url + f"/scans/{scan_id}"
         try:
-            response = requests.get(url=url, headers=headers)
+            response = requests.get(url=url, headers=self.headers)
             response.raise_for_status()
 
-            scan = response.json()
-            return scan
+            return response.json()
         except Exception as e:
-            logging.error("Error in InsightAppSec API: Get Scan", e)
+            print("Error in InsightAppSec API: Get Scan", e)
             raise e
 
     def search(self, search_type, query):
         url = self.url + "/search"
-        headers = self.headers
         body = {
             "type": search_type,
             "query": query
         }
-        cont = True
         results = []
 
         try:
-            while cont:
-                response = requests.post(url=url, headers=headers, data=json.dumps(body))
+            while True:
+                response = requests.post(url=url, headers=self.headers, data=json.dumps(body))
                 response.raise_for_status()
 
                 response_dict = response.json()
                 results.extend(response_dict.get("data"))
 
                 if len(results) >= response_dict.get("metadata").get("total_data"):
-                    cont = False
+                    break
                 else:
                     for link in response_dict.get("links"):
                         if link.get("rel") == "next":
                             url = link.get("href")
                             break
-                del response
             return results
         except Exception as e:
-            logging.error("Error in InsightAppSec API: Search", e)
+            print("Error in InsightAppSec API: Search", e)
             raise e
 
     def get_url_id(self, url):
-        url_split = url.split("/")
-        resource_id = url_split[-1]
-        return resource_id
-    def get_vulnerabilities(self, scan_id):
-        url = self.url + f"/vulnerabilities?query=vulnerability.scans.id='{scan_id}'"
-        headers = self.headers
+        return url.split("/")[-1]
 
+    def get_vulnerabilities(self, scan_id):
+        query = f"vulnerability.scans.id = '{scan_id}'"
+        url = self.url + "/search"
+        body = {
+            "query": query,
+            "type": "VULNERABILITY"
+        }
         try:
-            response = requests.get(url=url, headers=headers)
+            response = requests.post(url=url, headers=self.headers, data=json.dumps(body))
             response.raise_for_status()
 
-            vulnerabilities = response.json()
-            return vulnerabilities
+            return response.json()
         except Exception as e:
-            logging.error(f"Error in InsightAppSec API: Get Vulnerabilities\n{e}")
+            print(f"Error in InsightAppSec API: Get Vulnerabilities\n{e}")
             raise e
